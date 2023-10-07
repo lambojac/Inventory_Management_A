@@ -59,7 +59,7 @@ const logOut = asynchandler( async (req, res) => {
     res.cookie("token", "", {
         path: "/",
         httpOnly: true,
-        expires: new Date(0),
+        expires: new Date
         sameSite:"none",
         secure:true
     });
