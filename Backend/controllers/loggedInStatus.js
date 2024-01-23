@@ -13,8 +13,9 @@ const loggedInStatus = asyncHandler(async (req, res) => {
     //verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     
-    // return boolean response
+    // return boolean true respomse if user is logged in
     if (decoded) {
+        
         return res.json(true);
 }
     return res.json(false);
