@@ -24,3 +24,6 @@ const getUser = asynchandler(async (req, res) => {
 });
 
 export default getUser;
+
+
+

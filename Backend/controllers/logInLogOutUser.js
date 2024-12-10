@@ -4,53 +4,64 @@ import bcrypt from "bcryptjs";
 import genToken from "./tokenGen.js";
 
 
-const loginUser = asynchandler( async(req, res) => {
+
+const loginUser = asynchandler(async (req, res) => {
     const { email, password } = req.body;
 
-    //validate required fields
+    // Validate required fields
     if (!email || !password) {
         res.status(400);
-        throw new Error("Please provide correct email and password");
+        throw new Error("Please provide correct email and password.");
     }
     
-    //find user by email
+    // Find user by email
     const user = await User.findOne({ email });
 
     if (!user) {
         res.status(400);
         throw new Error("User not found, Please sign up!");
     }
-    
-    //check password
+
+    // Check if email is confirmed
+    if (!user.isEmailConfirmed) {
+        res.status(400);
+        throw new Error("Please confirm your email before logging in.");
+    }
+
+    // Check password
     const passwordIsValid = await bcrypt.compare(password, user.password);
 
-    // generate token
-    const token = genToken(user._id);
-
     if (passwordIsValid) {
-        //send cookie to server
+        // Generate token
+        const token = genToken(user._id);
+
+        // Send cookie to server
         res.cookie("token", token, {
             path: "/",
             httpOnly: true,
-            expires: new Date(Date.now() + 1000 * 24 * 60 * 60),
-            sameSite:"none",
-            secure:true,
+            expires: new Date(Date.now() + 1000 * 24 * 60 * 60), // Expires in 1 day
+            sameSite: "none",
+            secure: true,
         });
-    }
-    if (user && passwordIsValid){
-        const { _id, name, email, password, photo, bio } = user;
+
+        // Respond with user details and token
+        const { _id, first_name, last_name, email, phone_number, gender, country, state, date_of_birth, role } = user;
         res.status(200).json({
             _id,
-            name,
+            first_name,
+            last_name,
             email,
-            password,
-            photo,
-            bio,
+            phone_number,
+            gender,
+            country,
+            state,
+            date_of_birth,
+            role,
             token,
-    });
-    }else{
+        });
+    } else {
         res.status(400);
-        throw new Error("Invalid Email or password");
+        throw new Error("Invalid Email or password.");
     }
 });
 
@@ -59,7 +70,7 @@ const logOut = asynchandler( async (req, res) => {
     res.cookie("token", "", {
         path: "/",
         httpOnly: true,
-        expires: new Date
+        expires: new Date,
         sameSite:"none",
         secure:true
     });

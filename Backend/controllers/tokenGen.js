@@ -6,3 +6,4 @@ const genToken = (id) => {
 };
 
 export default genToken;
+
