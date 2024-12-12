@@ -13,7 +13,7 @@ export const getUserProfile = asyncHandler(async (req, res) => {
 
     if (!userProfile) {
         res.status(404);
-        throw new Error("User profile not found");
+        throw new Error("the User profile not found");
     }
 
     res.status(200).json(userProfile);
