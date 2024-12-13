@@ -74,7 +74,7 @@ const logOut = asynchandler( async (req, res) => {
         sameSite:"none",
         secure:true
     });
-    return res.status(200).json({ message: "Sucessfully logged out"});
+    return res.status(200).json({ message: "you are Sucessfully logged out"});
 });
 
 export  { loginUser, logOut };
