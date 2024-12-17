@@ -16,7 +16,11 @@ const registerUser = asyncHandler(async (req, res) => {
         state,
         date_of_birth,
         role = "member", // Default role if not provided
+        emailConfirmationToken
     } = req.body;
+
+    // Generate confirmation token if not provided
+    const confirmationToken = emailConfirmationToken || crypto.randomBytes(20).toString("hex");
 
     // Validate required fields
     if (
@@ -67,13 +71,11 @@ const registerUser = asyncHandler(async (req, res) => {
         date_of_birth: formattedDateOfBirth,
         role, // Use the role extracted from req.body, default is 'user'
         isEmailConfirmed: false, // Email not confirmed initially
+        emailConfirmationToken: confirmationToken
     });
 
-    // Generate a unique confirmation token (e.g., using a library like uuid or jwt)
-    const confirmationToken = genToken(user._id); // Ensure this function generates a unique token
-
     // Send confirmation email
-    const confirmationUrl = `${process.env.FRONTEND_URL}/confirm-email/${confirmationToken}`;
+    const confirmationUrl = `${process.env.CLIENT_URL}/verify-successful/${confirmationToken}`;
     const message = `
         <p>Thank you for registering!</p>
         <p>Please click the link below to confirm your email address:</p>
@@ -93,7 +95,7 @@ const registerUser = asyncHandler(async (req, res) => {
         secure: true,
     });
 
-    // Respond with user details
+    // Respond with user details and email confirmation token
     if (user) {
         const {
             _id,
@@ -120,10 +122,12 @@ const registerUser = asyncHandler(async (req, res) => {
             date_of_birth,
             role,
             token,
+            emailConfirmationToken: confirmationToken, // Send the generated token
         });
     } else {
         res.status(400);
         throw new Error("Invalid user data.");
     }
 });
-export default registerUser
+
+export default registerUser;
