@@ -22,11 +22,11 @@ const loginUser = asynchandler(async (req, res) => {
         throw new Error("User not found, Please sign up!");
     }
 
-    // Check if email is confirmed
-    if (!user.isEmailConfirmed) {
-        res.status(400);
-        throw new Error("Please confirm your email before logging in.");
-    }
+    // // Check if email is confirmed
+    // if (!user.isEmailConfirmed) {
+    //     res.status(400);
+    //     throw new Error("Please confirm your email before logging in.");
+    // }
 
     // Check password
     const passwordIsValid = await bcrypt.compare(password, user.password);
