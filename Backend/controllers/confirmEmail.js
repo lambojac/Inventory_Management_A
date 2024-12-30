@@ -8,7 +8,7 @@ const confirmEmail = asyncHandler(async (req, res) => {
 
     if (!user) {
         res.status(400);
-        throw new Error("Invalid or expired confirmation token is expired.");
+        throw new Error("Invalid or expired confirmation token is now expired.");
     }
 
     // Set email as confirmed
