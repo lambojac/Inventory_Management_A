@@ -19,7 +19,7 @@ const loginUser = asynchandler(async (req, res) => {
 
     if (!user) {
         res.status(400);
-        throw new Error("User not found, Please sign up!");
+        throw new Error("User not found, Please kindly sign up!");
     }
 
     // // Check if email is confirmed
